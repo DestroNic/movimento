@@ -1,0 +1,31 @@
+*{
+	font-family: 'Montserrat', sans-serif;
+	
+}
+
+body {
+ background-image: url("movimg/SnowAgain.png");
+ background-color: #cccccc;
+}
+
+.accordion .btn-link {
+	color: black;
+}
+table{
+	color: black;
+}
+.btn-link{
+	color: black;
+}
+a {
+	color: white;
+
+}
+a:hover {
+	color: #007bff;
+}
+.btn-primary{
+	color: white;
+	background-color: rgba(255,255,255,0);
+	border-color: rgba(255,255,255,0);
+}

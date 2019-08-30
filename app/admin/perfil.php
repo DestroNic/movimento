@@ -3,7 +3,7 @@ include('../includes/header.php');
 
 $conectar=conexion();
 
-$sql="select * from usuarios where id=?";
+$sql="SELECT * FROM usuarios WHERE id=?";
 
 $sql=$conectar->prepare($sql);
 $sql->bindValue(1, $_GET["id"]);
@@ -55,10 +55,10 @@ if($resultado=$sql->fetchAll())
       <?php $file=$resultado[0]["comprobante"] ?>
     </div>
     <div class="col-md-4">
-      <p><strong>Seguimiento: </strong><?php echo $resultado[0]["consultapre"];?>*9</p>
+      <p><strong>Seguimiento: </strong><?php echo $resultado[0]["consultapre"];?></p>
     </div>
       <div class="col-md-4">
-      <p><strong>Comprobante de Pago: <a href="<?php echo $file;?>" target="_blank">Comprobante De Pago</a></strong></p>
+      <p><strong>Comprobante de Pago: <a href="../<?php echo $file;?>" target="_blank">Comprobante De Pago</a></strong></p>
       </div>
   </div>
     </div><br>

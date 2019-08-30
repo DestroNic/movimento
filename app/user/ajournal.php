@@ -1,12 +1,13 @@
 <?php 
 
-include('../includes/header.php');
+include('../includes/adminhead.php');
 
    $conectar = conexion();
 
+
 if(isset($_SESSION['type'])){
 
-$sql = "SELECT ali.id_alimento, ali.porcion, ali.alimento, ali.proteina, ali.carbs, ali.grasa, ali.libre, jour.dia, jour.comida, jour.id, jour.porcion1 FROM alimentos ali INNER JOIN journal jour ON ali.id_alimento = jour.alimento WHERE id=".$_SESSION['id'];
+$sql = "SELECT ali.id_alimento, ali.porcion, ali.alimento, ali.proteina, ali.carbs, ali.grasa, ali.libre, jour.dia, jour.comida, jour.id, jour.porcion1 FROM alimentos ali INNER JOIN journal jour ON ali.id_alimento = jour.alimento WHERE id=".$_GET['id'];
 
  $sql = $conectar->prepare($sql);
  $sql->execute();
@@ -14,7 +15,10 @@ $sql = "SELECT ali.id_alimento, ali.porcion, ali.alimento, ali.proteina, ali.car
 $resultado = $sql->fetchAll();
 
 
+
 ?>
+
+
 
 <br>
       
@@ -27,7 +31,7 @@ $resultado = $sql->fetchAll();
 
 
 
-         <table class="table">
+         <table class="table" id="table">
           <br>
               <thead>
                 <tr>
@@ -39,7 +43,12 @@ $resultado = $sql->fetchAll();
                 </tr>
               </thead>
               <tbody>
-<?php  for($i=0;$i<count($resultado);$i++){
+    <?php  
+    $total_tp = 0;
+    $total_tc = 0;
+    $total_tg = 0;
+
+    for($i=0;$i<count($resultado);$i++){
     $porcion = $resultado[$i]['porcion1'];
     $proteina = $resultado[$i]['proteina'];
     $carbs = $resultado[$i]['carbs'];
@@ -49,22 +58,43 @@ $resultado = $sql->fetchAll();
     $tc = (float)$porcion * (float)$carbs;
     $tg = (float)$porcion * (float)$grasa;
 
+    $total_tp += $tp;
+    $total_tc += $tc;
+    $total_tg += $tg;
+
  ?>
                 <tr>
-                  <td><?php echo $resultado[$i]['dia']; ?></td>
+                   <td><?php 
+                  $orgDate = $resultado[$i]['dia'];
+                  $newDate = date("d-m-y", strtotime($orgDate));
+                  echo $newDate ?></td>
+                
+                
                   <td><?php echo $resultado[$i]['alimento']; ?></td>
-                  <td><?php echo $tp; ?></td>
-                  <td><?php echo $tc; ?></td>
-                  <td><?php echo $tg; ?></td>
-
+                  <td class="total1"><?php echo $tp; ?></td>
+                  <td class="total2"><?php echo $tc; ?></td>
+                  <td class="total3"><?php echo $tg; ?></td>
                 </tr>
+
+                
          <?php } ?>
               </tbody>
             </table>
        
+              <table class="table">
+
+                <thead>
+                  <th class="col-md-8">Total</th>
+                  <td id="totals1"><?php echo $total_tp ?></td>
+                  <td id="totals2"><?php echo $total_tc ?></td>
+                  <td id="totals3"><?php echo $total_tg ?></td>
+                </thead>
+              </table>
+
+
 </div>
 
-<?php
+ <?php
 } else {
   echo "<script type='text/javascript'>
     alert('Para accesar a esta pagina tenes que estar registrado e iniciar sesion');

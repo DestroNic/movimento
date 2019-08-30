@@ -1,5 +1,5 @@
 <?php
-include('../includes/header.php');
+include('../includes/adminhead.php');
 
 $conexion = conexion();
 
@@ -12,12 +12,12 @@ $conexion = conexion();
   $stmt->execute();
   $resultado = $stmt->fetchAll();
 
-  for($i=0;$i<count($resultado);$i++){
-$id = $resultado[$i]['id_checkin'];
+
 
 ?>
-<br>
+
 <div class="container">
+  <br>
 <input class="btn btn-danger" value="Atras" onclick="window.history.back()"></input>
    <br>
 <div class="table-responsive">
@@ -37,6 +37,10 @@ $id = $resultado[$i]['id_checkin'];
     </tr>
   </thead>
   <tbody>
+    <?php 
+      for($i=0;$i<count($resultado);$i++){
+$id = $resultado[$i]['id_checkin'];
+    ?>
     <tr>
       <td><?php echo $resultado[$i]["semana"];?></td>
       <td><?php echo $resultado[$i]["fecha"];?></td>

@@ -1,28 +1,30 @@
 <?php 
-include('../conexion.php');
-include('../header.php');
+include('../includes/header.php');
 
    $conectar = conexion();
 $tm = time();
-$date = date('l, d/m/y', $tm);
+$date = date("d/m/Y", $tm);
 
-
+if(isset($_SESSION['type'])){
    
 
    if(isset($_POST['agregar'])){
+   
 
 
     $agregar = "INSERT INTO journal (dia, comida, alimento, id, porcion1) VALUES (?, ?, ?, ?, ?)";
     $agregar = $conectar->prepare($agregar);
    
-    $agregar->bindValue(1, date('l, d/m/y', $tm));
+    $agregar->bindValue(1, $date);
     $agregar->bindValue(2, $_POST['comida']);
     $agregar->bindValue(3, $_POST['alimento']);
     $agregar->bindValue(4, $_SESSION['id']);
     $agregar->bindValue(5, $_POST['porcion1']);
+
     $agregar->execute();
 
-    header('Location:journal2.php');
+
+    //header('Location:journal2.php');
    }
 
 $sql = "SELECT ali.id_alimento, ali.porcion, ali.alimento, ali.proteina, ali.carbs, ali.grasa, ali.libre, jour.dia, jour.comida, jour.id, jour.porcion1 FROM alimentos ali INNER JOIN journal jour ON ali.id_alimento = jour.alimento WHERE id=".$_SESSION['id'];
@@ -94,10 +96,10 @@ $resultado = $sql->fetchAll();
           <option value="0">Porcion</option>
           <option value="1">1</option>
           <option value="0.75">0.75</option>
-          <option value="0.5">0.5</option>
+          <option value="0.50">0.50</option>
           <option value="0.25">0.25</option>          
         </select>
-      </div>
+       </div>
       </div>
     </div>
           
@@ -139,9 +141,15 @@ $resultado = $sql->fetchAll();
     $tc = (float)$porcion * (float)$carbs;
     $tg = (float)$porcion * (float)$grasa;
 
+
+
  ?>
+
                 <tr>
-                  <td><?php echo $resultado[$i]['dia']; ?></td>
+                  <td><?php 
+                  $orgDate = $resultado[$i]['dia'];
+                  $newDate = date("d-m-Y", strtotime($orgDate));
+                  echo $newDate ?></td>
                   <td><?php echo $resultado[$i]['alimento']; ?></td>
                   <td><?php echo $tp; ?></td>
                   <td><?php echo $tc; ?></td>
@@ -155,7 +163,13 @@ $resultado = $sql->fetchAll();
 </div>
 
 <?php
-include ('../footer.php');
+} else {
+  echo "<script type='text/javascript'>
+    alert('Para accesar a esta pagina tenes que estar registrado e iniciar sesion');
+    window.location='../login.php';
+  </script>";
+}
+include ('../includes/footer.php');
 
 
   ?>

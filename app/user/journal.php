@@ -3,7 +3,8 @@ include('../includes/header.php');
 
    $conectar = conexion();
 $tm = time();
-$date = $date = date_default_timezone_set("America/Costa_Rica");;
+$date = date('Y-m-d H:i:s', $tm);
+
 
 if(isset($_SESSION['type'])){
    
@@ -14,7 +15,7 @@ if(isset($_SESSION['type'])){
     $agregar = "INSERT INTO journal (dia, comida, alimento, id, porcion1) VALUES (?, ?, ?, ?, ?)";
     $agregar = $conectar->prepare($agregar);
    
-    $agregar->bindValue(1, $date = date_default_timezone_set("America/Costa_Rica", $tm));
+    $agregar->bindValue(1, $date);
     $agregar->bindValue(2, $_POST['comida']);
     $agregar->bindValue(3, $_POST['alimento']);
     $agregar->bindValue(4, $_SESSION['id']);
@@ -93,7 +94,7 @@ $resultado = $sql->fetchAll();
           <option value="0">Porcion</option>
           <option value="1">1</option>
           <option value="0.75">0.75</option>
-          <option value="0.5">0.5</option>
+          <option value="0.50">0.50</option>
           <option value="0.25">0.25</option>          
         </select>
       </div>
@@ -128,7 +129,12 @@ $resultado = $sql->fetchAll();
                 </tr>
               </thead>
               <tbody>
-<?php  for($i=0;$i<count($resultado);$i++){
+<?php
+    $total_tp = 0;
+    $total_tc = 0;
+    $total_tg = 0;
+
+    for($i=0;$i<count($resultado);$i++){
     $porcion = $resultado[$i]['porcion1'];
     $proteina = $resultado[$i]['proteina'];
     $carbs = $resultado[$i]['carbs'];
@@ -138,11 +144,20 @@ $resultado = $sql->fetchAll();
     $tc = (float)$porcion * (float)$carbs;
     $tg = (float)$porcion * (float)$grasa;
 
+    $total_tp += $tp;
+    $total_tc += $tc;
+    $total_tg += $tg;
+
+
  ?>
+
                 <tr>
-                  <td><?php echo $resultado[$i]['dia']; ?></td>
+                  <td><?php 
+                  $orgDate = $resultado[$i]['dia'];
+                  $newDate = date("d-m-Y", strtotime($orgDate));
+                  echo $newDate ?></td>
                   <td><?php echo $resultado[$i]['alimento']; ?></td>
-                  <td><?php echo $tp; ?></td>
+                  <td><?php echo $tp++; ?></td>
                   <td><?php echo $tc; ?></td>
                   <td><?php echo $tg; ?></td>
 
@@ -150,7 +165,15 @@ $resultado = $sql->fetchAll();
          <?php } ?>
               </tbody>
             </table>
-       
+       <table class="table">
+
+  <thead>
+    <th class="col-md-8">Total</th>
+    <td id="totals1"><?php echo $total_tp ?></td>
+    <td id="totals2"><?php echo $total_tc ?></td>
+    <td id="totals3"><?php echo $total_tg ?></td>
+  </thead>
+</table>
 </div>
 
 <?php
